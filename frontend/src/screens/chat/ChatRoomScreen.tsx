@@ -5,8 +5,7 @@ import {
   FlatList, 
   StyleSheet, 
   KeyboardAvoidingView, 
-  Platform, 
-  SafeAreaView 
+  Platform 
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useRoute, RouteProp } from '@react-navigation/native';
@@ -147,11 +146,11 @@ export default function ChatRoomScreen() {
   const typingList = Object.values(typingUsers);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.container}>
       <KeyboardAvoidingView
         style={styles.keyboardContainer}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.select({ ios: 90, android: 80 })}
       >
         <FlatList
           ref={flatListRef}
@@ -183,12 +182,12 @@ export default function ChatRoomScreen() {
           onStopTyping={handleStopTyping}
         />
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  container: {
     flex: 1,
     backgroundColor: '#E5DDD5', // WhatsApp background gray-brown
   },

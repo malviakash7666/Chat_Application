@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Image } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -38,7 +38,10 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.logo}>💬</Text>
+        <Image 
+          source={require('../../../assets/images/app_logo.png')} 
+          style={styles.logoImage} 
+        />
         <Text style={styles.title}>Welcome back</Text>
         <Text style={styles.subtitle}>Enter your email or username and password to connect</Text>
       </View>
@@ -112,9 +115,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  logo: {
-    fontSize: 60,
-    marginBottom: 10,
+  logoImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 16,
+    marginBottom: 12,
   },
   title: {
     fontSize: 24,

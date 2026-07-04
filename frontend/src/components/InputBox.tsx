@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface InputBoxProps {
   onSend: (text: string) => void;
@@ -8,6 +9,7 @@ interface InputBoxProps {
 }
 
 export default function InputBox({ onSend, onTyping, onStopTyping }: InputBoxProps) {
+  const insets = useSafeAreaInsets();
   const [text, setText] = useState('');
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTypingRef = useRef(false);
@@ -59,7 +61,7 @@ export default function InputBox({ onSend, onTyping, onStopTyping }: InputBoxPro
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, 8) }]}>
       <TextInput
         style={styles.input}
         placeholder="Type a message..."

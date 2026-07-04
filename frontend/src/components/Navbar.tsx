@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, useWindowDimensions, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { useAuth } from '../context/AuthContext';
@@ -30,7 +30,10 @@ export default function Navbar({ navigation, route }: NativeStackHeaderProps) {
           onPress={() => navigation.navigate(user ? 'ChatList' : 'Home')}
           activeOpacity={0.7}
         >
-          <Text style={[styles.logoEmoji, isSmallDevice && styles.smallLogoEmoji]}>💬</Text>
+          <Image 
+            source={require('../../assets/images/app_logo.png')} 
+            style={[styles.logoImage, isSmallDevice && styles.smallLogoImage]} 
+          />
           <Text style={[styles.logoText, isSmallDevice && styles.smallLogoText]}>ChatApp</Text>
         </TouchableOpacity>
 
@@ -160,12 +163,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  logoEmoji: {
-    fontSize: 22,
-    marginRight: 4,
+  logoImage: {
+    width: 28,
+    height: 28,
+    marginRight: 6,
+    borderRadius: 6,
   },
-  smallLogoEmoji: {
-    fontSize: 18,
+  smallLogoImage: {
+    width: 22,
+    height: 22,
   },
   logoText: {
     fontSize: 19,

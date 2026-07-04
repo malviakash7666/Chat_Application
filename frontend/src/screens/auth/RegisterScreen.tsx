@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView, Image } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -62,7 +62,10 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.logo}>💬</Text>
+        <Image 
+          source={require('../../../assets/images/app_logo.png')} 
+          style={styles.logoImage} 
+        />
         <Text style={styles.title}>Create Account</Text>
         <Text style={styles.subtitle}>Fill in your details to create a new profile</Text>
       </View>
@@ -165,9 +168,11 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginTop: 20,
   },
-  logo: {
-    fontSize: 60,
-    marginBottom: 10,
+  logoImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 16,
+    marginBottom: 12,
   },
   title: {
     fontSize: 24,

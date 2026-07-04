@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions, Platform, Image } from 'react-native';
 import Animated, { FadeIn, FadeInUp, ZoomIn } from 'react-native-reanimated';
 import { useAuth } from '../context/AuthContext';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -33,7 +33,10 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           entering={ZoomIn.delay(200).duration(800)} 
           style={[styles.logoContainer, { width: logoSize, height: logoSize, borderRadius: logoSize / 2 }]}
         >
-          <Text style={[styles.heroLogo, { fontSize: logoEmojiSize }]}>💬</Text>
+          <Image 
+            source={require('../../assets/images/app_logo.png')} 
+            style={{ width: logoSize, height: logoSize, borderRadius: logoSize / 2 }} 
+          />
         </Animated.View>
         
         <Animated.Text 

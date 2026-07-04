@@ -3,6 +3,7 @@ import { User, AuthState } from '../types/auth.types';
 import { storage } from '../utils/storage';
 import { authApi } from '../api/authApi';
 import socketService from '../services/socket';
+import { setAuthFailureListener } from '../api/axiosClient';
 
 interface AuthContextType {
   user: User | null;
@@ -27,6 +28,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     restoreToken();
+    setAuthFailureListener(() => {
+      setState({ user: null, accessToken: null, refreshToken: null, loading: false });
+      socketService.disconnect();
+    });
   }, []);
 
   const restoreToken = async () => {

@@ -9,6 +9,17 @@ import rateLimit from 'express-rate-limit';
 // Load environmental variables
 dotenv.config();
 
+// Validate critical environment variables
+const criticalEnvVars = ['JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET'];
+if (process.env.NODE_ENV === 'production') {
+  criticalEnvVars.push('DATABASE_URL');
+}
+const missingEnvVars = criticalEnvVars.filter(varName => !process.env[varName]);
+if (missingEnvVars.length > 0) {
+  console.error(`\n=========================================\nCRITICAL STARTUP ERROR: Missing environment variables: ${missingEnvVars.join(', ')}\nPlease configure these in your environment / .env file / Render dashboard.\n=========================================\n`);
+  process.exit(1);
+}
+
 // Import database, routes, and services
 import { sequelize } from './src/database/models/index.js';
 import userRoutes from './src/routes/userRoutes.js';

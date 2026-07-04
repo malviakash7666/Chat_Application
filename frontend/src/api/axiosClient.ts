@@ -2,6 +2,13 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { config } from '../constants/config';
 import { storage } from '../utils/storage';
 
+// Auth failure listener callback system
+let authFailureListener: (() => void) | null = null;
+
+export const setAuthFailureListener = (callback: () => void) => {
+  authFailureListener = callback;
+};
+
 const axiosClient = axios.create({
   baseURL: config.BASE_URL,
   headers: {
@@ -54,6 +61,18 @@ axiosClient.interceptors.response.use(
 
     // Handle token expiry (401 Unauthorized)
     if (error.response.status === 401 && !originalRequest._retry) {
+      // If it's an authentication endpoint (login, register, refresh),
+      // we shouldn't attempt token refresh. Just pass the error through.
+      const isAuthEndpoint = originalRequest.url && (
+        originalRequest.url.includes('/api/users/login') ||
+        originalRequest.url.includes('/api/users/register') ||
+        originalRequest.url.includes('/api/users/refresh-token')
+      );
+
+      if (isAuthEndpoint) {
+        return Promise.reject(error);
+      }
+
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -67,15 +86,17 @@ axiosClient.interceptors.response.use(
           });
       }
 
+      // Check if we have a refresh token first before setting isRefreshing = true
+      const refreshToken = await storage.getRefreshToken();
+      if (!refreshToken) {
+        // If there's no refresh token, we can't refresh. Just reject with the original 401 error.
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        const refreshToken = await storage.getRefreshToken();
-        if (!refreshToken) {
-          throw new Error('No refresh token available');
-        }
-
         // Direct axios post call to avoid recursion in client interceptor
         const response = await axios.post(`${config.BASE_URL}/api/users/refresh-token`, {
           refreshToken
@@ -98,6 +119,11 @@ axiosClient.interceptors.response.use(
         // Clear local credentials on authentication failure
         await storage.clearTokens();
         await storage.clearUser();
+
+        // Notify the app of the auth failure (e.g. to log out/redirect)
+        if (authFailureListener) {
+          authFailureListener();
+        }
         
         return Promise.reject(refreshError);
       } finally {

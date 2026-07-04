@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput, ActivityIndicator, Image } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../navigation/AppNavigator';
@@ -250,9 +250,10 @@ export default function ChatListScreen({ navigation }: ChatListScreenProps) {
                 style={styles.chatCard}
                 onPress={() => navigation.navigate('ChatRoom', { username: 'General Group Chat' })}
               >
-                <View style={styles.groupAvatar}>
-                  <Text style={styles.groupAvatarText}>👥</Text>
-                </View>
+                <Image
+                  source={require('../../../assets/images/app_logo.png')}
+                  style={styles.groupAvatarImage}
+                />
                 <View style={styles.chatDetails}>
                   <View style={styles.chatHeader}>
                     <Text style={styles.chatName}>General Group Chat</Text>
@@ -426,16 +427,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  groupAvatar: {
+  groupAvatarImage: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#E7F2F1',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  groupAvatarText: {
-    fontSize: 22,
   },
   chatDetails: {
     flex: 1,
